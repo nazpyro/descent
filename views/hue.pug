@@ -1,56 +1,45 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='mobile-web-app-capable', content='yes')
-    title= title
-    link(href='/now/static/stylesheets/style.css', rel='stylesheet')
-    link(href='/now/static/favicon.ico', rel='icon')
-  body
-    .container
-      h1#title= title
-      h2
-        ol
-          li Make sure you're on the same network as your Hue Bridge. Visit 
-            a(href='https://www.meethue.com/api/nupnp', target='_blank')
-              | this link
-            |  and copy the value for 
-            span.code id
-            |  
-            span.nowrap here: 
-              input.hue-bridge-id(type='text', size='16', maxlength='16')
-          li.hue-step-two.hide Visit 
-            a.hue-token-link(href='', target='_blank')
-              | this link
-            | , log into your Hue account, click yes, and come back here.
-          li.hue-step-three.hide You have either been brought to a page that 
-            | says 
-            span.code Congratulations!
-            |  or to a page with an invalid URL. If the former, find the button
-            | that says 
-            span.code Back to the app
-            |  and right click it to copy the address it's linking to. If the 
-            | later, you've been redirected to that page automatically, so 
-            | copy the URL in your browser's address bar. Then paste what 
-            | you've copied 
-            span.nowrap here: 
-              input.hue-token(type='text', size='16', maxlength='128')
-            .hue-token-error.hide It seems your URL is invalid. Make sure it 
-              | starts with 
-              span.code phhueapp://
-          li.hue-step-four.hide Select one or more rooms to control
-            div.hue-groups-loading
-              i(class='fa fa-circle-o-notch fa-spin')
-              |   Loading...
-            div.hue-groups
-          li.hue-step-five.hide You're all done! Now, just hit 
-            span.code l
-            |  on your now playing page to toggle light control on and off.
-            | You can come back to this page at any time to update the groups
-            | you're using or switch to a different Hue bridge (just start over
-            | from step one).
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js')
-    script(src='/now/static/javascripts/hue.js')
+extends template/layout
 
+block otherStylesheets
+  link(href='/now/app/static/stylesheets/config.css', rel='stylesheet')
+
+block content
+  .container
+    h1= title
+    div
+      span.hide.hueClientId= hueClientId
+      span.hide.hueAppId= hueAppId
+      ol
+        li.hueStep#loading
+          h2
+            i.fas.fa-circle-notch.fa-spin
+            | Loading...
+        li.hide.hueStep#connect
+          h2
+            a.appAuth Click here
+            |  to connect your Hue account.
+        li.hide.hueStep#hue-step-rooms
+          h2 Select one or more  rooms to control.
+          div.hide.selectGroupsLoading#select-groups-loading-rooms
+            h2
+              i.fas.fa-circle-notch.fa-spin
+              | Loading...
+          div.selectGroups#select-groups-rooms
+        li.hide.hueStep#hue-step-done All set. Hit 
+          span.code l
+          |  on your now playing page to toggle light control on and off.
+    div.hide#hue-options
+      h2 Color Options
+      div.selectGroups
+        div.selectGroup.groupHue#hue-shuffle Shuffle order
+    .links
+      a(href='/now')
+        | home 
+        i.fas.fa-home.fa-sm
+      a(href='/now/app/config')
+        | settings 
+        i.fas.fa-sliders-h.fa-sm
+
+block otherJavascripts
+  script(src='/now/app/static/javascripts/utility/general.js')
+  script(src='/now/app/static/javascripts/hue.js')

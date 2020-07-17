@@ -1,0 +1,29 @@
+extends template/layout
+
+block otherStylesheets
+  link(href='/now/app/static/stylesheets/landing.css', rel='stylesheet')
+
+block content
+  .outer-container
+    .bubbles
+      img(src='/now/app/static/images/bubbles.svg')
+    .container
+      h1= title
+      form.userInputForm(method='post')
+        h2 enter your Last.fm username: 
+          span.userInputLine
+            input.userInput(name='user', type='text', size='15', maxlength='20')
+            input(name='defaultUser', type='hidden', value=`${user}`)
+            | &nbsp;
+            a(href='#' onclick='submitUser(); return false;')
+              i.fas.fa-chevron-down
+      .links
+        a(href='/now/app/config')
+          | settings 
+          i.fas.fa-sliders-h.fa-sm
+        a(href='https://github.com/JasonPuglisi/descent')
+          | source 
+          i.fab.fa-github.fa-sm
+
+block otherJavascripts
+  script(src='/now/app/static/javascripts/landing.js')

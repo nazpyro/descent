@@ -1,24 +1,39 @@
 {
-  "name": "lastfm-now",
-  "version": "1.3.3",
-  "description": "A now listening display for Last.fm.",
-  "author": "Jason Puglisi <jason@puglisi.im>",
+  "name": "descent",
+  "version": "1.7.0",
+  "description": "Elegant now playing display for Last.fm showing song metadata and local weather.",
+  "keywords": [
+    "descent",
+    "last.fm",
+    "lastfm",
+    "scrobble",
+    "hud",
+    "kiosk"
+  ],
+  "license": "MIT",
+  "homepage": "https://descent.live",
+  "bugs": "https://github.com/JasonPuglisi/descent/issues",
+  "repository": "github:JasonPuglisi/descent",
+  "author": "Jason Puglisi <hello@jasonpuglisi.com> (https://www.jasonpuglisi.com)",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/JasonPuglisi/lastfm-now.git"
-  },
-  "bugs": {
-    "url": "https://github.com/JasonPuglisi/lastfm-now/issues"
-  },
-  "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "pug": "^2.0.0-beta6",
-    "request": "^2.74.0"
+    "test": "scripts/build_and_test.sh"
   },
   "private": true,
-  "license": "MIT"
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "pug": "^3.0.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "eslint": "^7.3.1",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify-es": "^2.0.0"
+  }
 }
