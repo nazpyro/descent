@@ -16,7 +16,7 @@ function loadAuthorization() {
     $('#hue-options').show();
     getRooms(accessToken, username);
   } else if (refreshToken) {
-    refreshAccessToken(refreshToken, loadAuthorization);
+    refreshAccessToken(refreshToken, username, loadAuthorization);
   } else {
     $('#loading').hide();
     $('#connect').show();
@@ -24,21 +24,20 @@ function loadAuthorization() {
   }
 }
 
-function refreshAccessToken(refreshToken, callback) {
-  let url = `/now/app/hue/authorize?refreshToken=${refreshToken}`;
+function refreshAccessToken(refreshToken, username, callback) {
+  let url = `/app/hue/authorize?refreshToken=${refreshToken}&username=${username}`;
   $.get(url, () => {
     callback();
   });
 }
 
 function authorizeApplication() {
-  let hueClientId = $('.hueClientId').text();
-  let hueAppId = $('.hueAppId').text();
-  $('.appAuth').attr('href', `https://api.meethue.com/oauth2/auth?clientid=${hueClientId}&appid=${hueAppId}&deviceid=Descent&response_type=code`);
+  let hueClientId = encodeURIComponent($('.hueClientId').text());
+  $('.appAuth').attr('href', `https://api.meethue.com/v2/oauth2/authorize?client_id=${hueClientId}&response_type=code`);
 }
 
 function getRooms(accessToken, username) {
-  let url = '/now/app/hue/api/groups';
+  let url = '/app/hue/api/groups';
   $.post(url, { accessToken, username }, data => {
     $('.groupRooms').each(function() {
       $(this).remove();
@@ -70,7 +69,7 @@ function getRooms(accessToken, username) {
 
       if (selectedRooms.length > 0) {
         $('#hue-step-done').show();
-        Cookies.set('hueRooms', selectedRooms.join(','), { expires: 3650 });
+        Cookies.set('hueRooms', selectedRooms.join(','), { expires: 3650, secure: true });
       } else {
         $('#hue-step-done').hide();
         Cookies.remove('hueRooms');
@@ -121,7 +120,7 @@ function processOptions() {
     $(`#hue-${option}`).on('click', function() {
       selected = !selected;
       $(this).toggleClass('selected');
-      Cookies.set(option, selected, { expires: 3650 });
+      Cookies.set(option, selected, { expires: 3650, secure: true });
     });
   });
 }

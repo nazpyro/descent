@@ -26,16 +26,17 @@ function getHueColors() {
     hueColors.push({ x: finalX, y: finalY });
   }
 
-  if (cookieEnabled('shuffle')) {
-    // Shuffle color order
-    for (let i = hueColors.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [hueColors[i], hueColors[j]] = [hueColors[j], hueColors[i]];
-    }
-  }
-
   // Return hue colors
   return hueColors;
+}
+
+function colorsChanged(last, current) {
+  if (last == undefined)
+    return true;
+
+  return !(last[0].x == current[0].x && last[0].y == current[0].y &&
+    last[1].x == current[1].x && last[1].y == current[1].y &&
+    last[2].x == current[2].x && last[2].y == current[2].y);
 }
 
 function updateHue() {
@@ -43,13 +44,28 @@ function updateHue() {
   if (!cookieEnabled('hueEnabled'))
     return;
 
+  // Stop if colors have not changed, or prepare and shuffle colors
+  let colors = resources.colors.hue;
+  let lastColors = resources.colors.last;
+  if (!colorsChanged(lastColors, colors)) {
+    return;
+  } else {
+    resources.colors.last = colors;
+    if (cookieEnabled('shuffle')) {
+      colors = colors
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+    }
+  }
+
   // Set Hue credentials
   let accessToken = Cookies.get('hueAccessToken');
   let username = Cookies.get('hueUsername');
   let rooms = Cookies.get('hueRooms').split(',');
 
   // Get light information from Hue
-  let url = '/now/app/hue/api/groups';
+  let url = '/app/hue/api/groups';
   $.post(url, { accessToken, username }, data => {
     // Loop through lights and colors for selected groups
     let lights = [];
@@ -60,7 +76,6 @@ function updateHue() {
       }
     }
 
-    let colors = resources.colors.hue;
     let colorIteration = 0;
     for (let k in lights) {
       let color = colors[colorIteration % colors.length];
@@ -72,7 +87,7 @@ function updateHue() {
       let colorY = color.y;
 
       // Send state request
-      let url = '/now/app/hue/api/light';
+      let url = '/app/hue/api/light';
       $.post(url, { accessToken, username, id, colorX, colorY });
     }
   });

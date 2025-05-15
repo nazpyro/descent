@@ -7,7 +7,7 @@ function initMenu() {
     cookieExists('hueUsername') && cookieExists('hueRooms');
   if (!resources.features.hue && cookieExists('hueRefreshToken')) {
     let refreshToken = Cookies.get('hueRefreshToken');
-    let url = `/now/app/hue/authorize?refreshToken=${refreshToken}`;
+    let url = `/app/hue/authorize?refreshToken=${refreshToken}`;
     $.get(url, () => {
       resources.features.hue = true;
       enableHue();
@@ -25,7 +25,7 @@ function initMenu() {
   setTimeout(() => { toggleDisplay('.help', false); }, 3600);
 
   // Save current user to populate index input
-  Cookies.set('lastUser', $('.music .user').text(), { expires: 3650 });
+  Cookies.set('lastUser', $('.music .user').text(), { expires: 3650, secure: true });
 
   // Apply transparent background if required
   if (getBackgroundType() === 'transparent')
@@ -79,6 +79,11 @@ function processKey(event) {
         showW = undefined;
       }
       toggleDisplay('.weather', showW);
+      break;
+    }
+    // Handle S to show settings page
+    case 83: {
+      window.location.href = '/app/config';
       break;
     }
   }

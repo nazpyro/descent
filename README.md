@@ -1,6 +1,6 @@
 # Descent
 
-[![Build Status](https://travis-ci.com/JasonPuglisi/descent.svg?branch=master)](https://travis-ci.com/JasonPuglisi/descent)
+[![Deploy to GCP App Engine](https://github.com/JasonPuglisi/descent/actions/workflows/deploy-app-engine.yaml/badge.svg?branch=main)](https://github.com/JasonPuglisi/descent/actions/workflows/deploy-app-engine.yaml)
 
 Elegant now playing display for Last.fm showing song metadata and local weather.
 
@@ -26,7 +26,7 @@ Descent's server listens on port 3000 by default, but this can be changed by
 setting the `DESCENT_PORT` environment variable. It's recommended to use a
 proxy, such as [NGINX](https://www.nginx.com/), in front of Descent's server.
 
-Navigate to [`/now`](https://descent.live/now) to use Descent.
+Navigate to [`/`](https://descent.live/) to use Descent.
 
 ## API Requirements
 
@@ -64,20 +64,31 @@ application to provide a few required values. Set your app ID as the `HUE_ID`
 environment variable, your client ID as the `HUE_CLIENT` environment variable,
 and your client secret as the `HUE_SECRET` environment variable.
 
+### Last.fm Rate Limiting
+
+To avoid Last.fm rate limiting, you can adjust the API polling interval. Set
+the `LASTFM_POLL_INTERVAL` environment variable to an integer in milliseconds.
+The default is `10000` (10 seconds), but a more reasonable value could be
+`5000` (5 seconds). If API calls in the browser start failing, and playing data
+isn't loading, increase the interval.
+
 ## User Preferences
 
 ### Descent Configuration
 
 To configure the background, weather, and time displays, visit
-[`/now/app/config`](https://descent.live/now/app/config). Dark Sky can
+[`/app/config`](https://descent.live/app/config). Dark Sky can
 automatically determine weather units, but OpenWeatherMap cannot, so Descent
 defaults to imperial units unless otherwise specified.
 
 #### Descent Configuration Import
 
 You can import settings through a POST request to
-[`/now/app/config/set`](https://descent.live/now/app/config/set). Each post
+[`/app/config/set`](https://descent.live/app/config/set). Each post
 parameter correponds to a cookie. Valid parameters and values are as follows:
+
+**Scrobble mode**
+`scrobbleMode`: `lastScrobbled`, `currentlyPlaying`
 
 **Background type**  
 `background`: `artist`, `album`, `transparent`, `none`
@@ -87,6 +98,12 @@ parameter correponds to a cookie. Valid parameters and values are as follows:
 
 **Default background image**  
 `defaultBackground`: any valid image URL
+
+**Weather location latitude**  
+`latitude`: any valid latitude coordinate
+
+**Weather location longitude**  
+`longitude`: any valid longitude coordinate
 
 **Weather units**  
 `units`: `imperial`, `metric`
@@ -115,12 +132,7 @@ parameter correponds to a cookie. Valid parameters and values are as follows:
 ### Phillips Hue Configuration
 
 To enable Phillips Hue control, visit
-[`/now/app/hue`](https://descent.live/now/app/hue) and follow the setup
+[`/app/hue`](https://descent.live/app/hue) and follow the setup
 instructions. Light colors will be set according to the three most prominent
 album art colors. If more than three lights are selected, the colors will be
 reused.
-
-If Descent is hosted using HTTPS, users must instruct their browsers to allow
-loading insecure (HTTP) content for the Descent website. This is because the
-Hue API can only be accessed via HTTP. Users are informed of this on the
-configuration page.

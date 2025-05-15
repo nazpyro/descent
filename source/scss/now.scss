@@ -1,8 +1,8 @@
 /* Sass imports */
 
-@import 'reset';
-@import 'variables';
-@import 'typography';
+@use 'reset';
+@use 'variables';
+@use 'typography';
 
 /* Typography styles */
 
@@ -22,7 +22,7 @@ h2 {
 }
 
 .apparent {
-  color: $light-gray;
+  color: variables.$light-gray;
   font-size: 0.75em;
 }
 
@@ -38,10 +38,14 @@ h2 {
   margin-bottom: 0.65em;
 }
 
-.scrobbles {
-  color: $light-gray;
+.scrobbles, .detailedScrobbles {
+  color: variables.$light-gray;
   font-size: 0.6em;
   margin-bottom: 0.3em;
+}
+
+.detailedScrobbles {
+  font-size: 0.5em;
 }
 
 .artist {
@@ -64,7 +68,7 @@ h2 {
 }
 
 .container {
-  background-color: $background-mask;
+  background-color: variables.$background-mask;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 4em);
